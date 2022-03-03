@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Home Page</title>
+</head>
+<body>
+<h1>Address Formats</h1>
+
+<h2>View Address Formats</h2>
+
+<table>
+    <tr>
+        <th>PRODUCT NAME</th>
+        <th>PRODUCT PRICE</th>
+    </tr>
+    <tr th:each="p: ${addressformats}" >
+        <td th:text="${p.country}"></td>
+        <td th:text="${p.username}"></td>
+        <td th:text="${p.city}"></td>
+        <td th:text="${p.pincode}"></td>
+
+    </tr>
+</table>
+
+<!-- Omitted code -->
+<h2>Add a addres format</h2>
+<form action="/addressformat" method="post">
+    User Name: <input
+        type="text"
+        name="username"><br />
+    Pincode: <input
+        type="number"
+        step="any"
+        name="pincode"><br />
+    City: <input
+        type="text"
+        name="city"><br />
+    Country: <input
+        type="text"
+        name="country"><br />
+    <button type="submit">Add Format</button>
+</form>
+</body>
+</html>

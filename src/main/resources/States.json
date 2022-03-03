@@ -1,0 +1,15 @@
+[{
+  "name": "maharashtra",
+  "code": 231,
+  "countryCode": 1001
+},
+  {
+    "name": "gujrat",
+    "code": 322,
+    "countryCode": 1001
+  },
+  {
+    "name": "rajasthan",
+    "code": 123,
+    "countryCode": 1001
+  }]
