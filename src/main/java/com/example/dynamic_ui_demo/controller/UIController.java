@@ -128,10 +128,10 @@ public class UIController {
     @RequestMapping(value = "/getCountries",
             produces = { "application/json" },
             method = RequestMethod.GET)
-    ResponseEntity<List<Country>> getCountries() {
-        List<Country> countries = addressFormatService.getCountries();
+    ResponseEntity<List<Object>> getCountries() {
+        List<Object> countries = addressFormatService.getCountries();
         if (countries != null) {
-            return new ResponseEntity<>(countries, HttpStatus.ACCEPTED);
+            return new ResponseEntity<List<Object>>(countries, HttpStatus.ACCEPTED);
         } else
             return new ResponseEntity<>(new ArrayList<>(), HttpStatus.ACCEPTED);
     }

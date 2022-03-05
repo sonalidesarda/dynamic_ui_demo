@@ -61,11 +61,11 @@ public class AddressFormatServiceImpl implements AddressFormatService{
     }
 
     @Override
-    public List<Country> getCountries()
+    public List<Object> getCountries()
     {
         log.info("AddressFormatServiceImpl :: getCountries called");
         List<Country> countries = countryRepository.findAll();
         log.info("AddressFormatServiceImpl :: getCountries result "+ countries);
-        return  countries;
+        return  countries.get(0).getCountries();
     }
 }

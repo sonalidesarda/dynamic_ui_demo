@@ -13,5 +13,5 @@ public interface AddressFormatService {
     public void addAddressFormat(AddressFormat addressFormat);
     public List<StateFormat> findStateList();
 
-    List<Country> getCountries();
+    List<Object> getCountries();
 }

@@ -4,17 +4,41 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collection = "Country")
+import java.util.ArrayList;
+
+@Document(collection = "country")
 @Getter
 @Setter
 @ToString
-@AllArgsConstructor
 public class Country {
     @Id
-    private String id;
-    private String Name;
+    public ObjectId _id;
+    public ArrayList<Object> countries;
 
+    public Country(){}
+
+    public Country(ObjectId _id, ArrayList<Object> countries) {
+        this._id = _id;
+        this.countries = countries;
+    }
+
+    public ObjectId getId() {
+        return _id;
+    }
+
+    public void setId(ObjectId id) {
+        this._id = id;
+    }
+
+    public ArrayList<Object> getCountries() {
+        return countries;
+    }
+
+    public void setCountries(ArrayList<Object> countries) {
+        this.countries = countries;
+    }
 }
