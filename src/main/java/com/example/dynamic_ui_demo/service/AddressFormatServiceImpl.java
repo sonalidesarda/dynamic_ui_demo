@@ -1,10 +1,16 @@
 package com.example.dynamic_ui_demo.service;
 
+import com.example.dynamic_ui_demo.Repository.CountryRepository;
 import com.example.dynamic_ui_demo.DynamicUiDemoApplication;
+import com.example.dynamic_ui_demo.controller.UIController;
 import com.example.dynamic_ui_demo.model.AddressFormat;
+import com.example.dynamic_ui_demo.model.Country;
 import com.example.dynamic_ui_demo.model.StateFormat;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -16,6 +22,14 @@ import java.util.List;
 public class AddressFormatServiceImpl implements AddressFormatService{
     private List<AddressFormat> addressFormatList = new ArrayList<>();
 
+    private static final Logger log = LoggerFactory.getLogger(AddressFormatServiceImpl.class);
+    @Autowired
+    CountryRepository countryRepository;
+
+    public AddressFormatServiceImpl(CountryRepository countryRepository)
+    {
+        this.countryRepository = countryRepository;
+    }
     public void addAddressFormat(AddressFormat addressFormat) {
         addressFormatList.add(addressFormat);
     }
@@ -46,4 +60,12 @@ public class AddressFormatServiceImpl implements AddressFormatService{
         return stateFormatList;
     }
 
+    @Override
+    public List<Country> getCountries()
+    {
+        log.info("AddressFormatServiceImpl :: getCountries called");
+        List<Country> countries = countryRepository.findAll();
+        log.info("AddressFormatServiceImpl :: getCountries result "+ countries);
+        return  countries;
+    }
 }
