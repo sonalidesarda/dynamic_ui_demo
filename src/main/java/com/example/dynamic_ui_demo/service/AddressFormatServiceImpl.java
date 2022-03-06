@@ -90,12 +90,8 @@ public class AddressFormatServiceImpl implements AddressFormatService{
         List<State> states = stateRepository.findAll();
         log.info("Count***"+states.size());
         log.info("AddressFormatServiceImpl :: getCountries result "+ states);
-        for(State s: states){
-            if(s.getCountry().equals(country)){
-                return s.getStates();
-            }
-        }
-        return Collections.emptyList();
+
+        return states.get(0).getStates();
     }
 
     @Override
