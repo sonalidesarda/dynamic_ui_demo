@@ -46,6 +46,8 @@ public class UIController {
         this.stateRepository = stateRepository;
     }
 
+
+
     @RequestMapping("/addressformats")
     public String viewForms( Model page) {
 //        List<AddressFormat> addressFormatList = addressFormatService.findAll();
@@ -85,22 +87,16 @@ public class UIController {
     }
 
 
-    @RequestMapping(value = "/getAddressFormat", produces = { "application/json" }, method = RequestMethod.GET)
-    ResponseEntity<AddressFormat> getAddressFormat( @RequestParam(value = "country", required = false) String country)
+    @RequestMapping(value = "/getAddressFormat", method = RequestMethod.GET)
+    ResponseEntity<List<String>> getAddressFormat( @RequestParam(value = "country", required = false) String country, Model page)
     {
         String accept = request.getHeader("Accept");
-        if (accept != null && accept.contains("application/json")) {
-            try {
-                return new ResponseEntity<AddressFormat>(objectMapper.readValue("{  \"bytes\": [],  \"empty\": true}", AddressFormat.class), HttpStatus.NOT_IMPLEMENTED);
-            } catch (IOException e) {
-                log.error("Couldn't serialize response for content type application/json", e);
-                return new ResponseEntity<AddressFormat>(HttpStatus.INTERNAL_SERVER_ERROR);
-            }
-        }
-
-        return new ResponseEntity<AddressFormat>(HttpStatus.NOT_IMPLEMENTED);
+        List<String> countries = addressFormatService.getCountries();
+        page.addAttribute("countries", countries);
+        return new ResponseEntity<>(countries, HttpStatus.ACCEPTED);
     }
 
+<<<<<<< Updated upstream
     @RequestMapping(value = "/getCountries",
             produces = { "application/json" },
             method = RequestMethod.GET)
@@ -114,6 +110,22 @@ public class UIController {
         } else
             return new ResponseEntity<>(new ArrayList<>(), HttpStatus.ACCEPTED);
     }
+=======
+    @RequestMapping(value = "/getCities",
+            produces = { "application/json" },
+            method = RequestMethod.GET)
+    ResponseEntity<List<Object>> getCities( @RequestParam(value = "state", required = false) String state,
+                                          @RequestParam(value = "country", required = false) String country)
+    {
+        List<Object> cityList = addressFormatService.getCities(state,country);
+        if(cityList != null){
+            return new ResponseEntity<List<Object>>(cityList, HttpStatus.ACCEPTED);
+        } else
+            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.ACCEPTED);
+    }
+
+
+>>>>>>> Stashed changes
     @RequestMapping(value = "/getStateOrProvince",
             produces = { "application/json" },
             method = RequestMethod.GET)
