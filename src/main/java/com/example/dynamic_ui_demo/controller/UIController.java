@@ -85,55 +85,57 @@ public class UIController {
     }
 
 
-    @RequestMapping(value = "/getAddressFormat", produces = { "application/json" }, method = RequestMethod.GET)
-    ResponseEntity<AddressFormat> getAddressFormat( @RequestParam(value = "country", required = false) String country)
+    @RequestMapping(value = "/getAddressFormat", method = RequestMethod.GET)
+    String getAddressFormat(
+            @RequestParam(value = "country", required = false) String country,
+            @RequestParam(value = "state", required = false) String state,
+                             Model page)
     {
-        String accept = request.getHeader("Accept");
-        if (accept != null && accept.contains("application/json")) {
-            try {
-                return new ResponseEntity<AddressFormat>(objectMapper.readValue("{  \"bytes\": [],  \"empty\": true}", AddressFormat.class), HttpStatus.NOT_IMPLEMENTED);
-            } catch (IOException e) {
-                log.error("Couldn't serialize response for content type application/json", e);
-                return new ResponseEntity<AddressFormat>(HttpStatus.INTERNAL_SERVER_ERROR);
+        List<Country> countries = countryRepository.findAll().get(0).getCountries();
+        List<String> countriesList = countries.stream().map(c -> c.getName())
+                .collect(Collectors.toList());
+        if(country != null)
+        {
+            countriesList.remove(country);
+            List<StateObject> stateList = stateRepository.findStates(country);
+            page.addAttribute("states", stateList);
+            page.addAttribute("country",country);
+            List<CityObject> cityList;
+            if(state != null)
+            {
+                cityList = cityRepository.findByState(state);
             }
+            else
+            {
+                cityList = cityRepository.findByCountry(country);
+            }
+            page.addAttribute("cities",cityList);
         }
 
-        return new ResponseEntity<AddressFormat>(HttpStatus.NOT_IMPLEMENTED);
+        page.addAttribute("countries",countriesList);
+        return "India_Address.html";
     }
 
-    @RequestMapping(value = "/getCountries",
-            produces = { "application/json" },
-            method = RequestMethod.GET)
-    ResponseEntity<List<Object>> getCountries() {
-
-        List<Object> countries = countryRepository.findAll().get(0).getCountries();
-
-
-        if (countries != null) {
-            return new ResponseEntity<List<Object>>(countries, HttpStatus.ACCEPTED);
-        } else
-            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.ACCEPTED);
-    }
     @RequestMapping(value = "/getStateOrProvince",
             produces = { "application/json" },
             method = RequestMethod.GET)
-    ResponseEntity<List<Object>> getStateOrProvince(
+    ResponseEntity<List<StateObject>> getStateOrProvince(
             @RequestParam(value = "country", required = false) String country) {
 
-        List<Object> stateList = stateRepository.findStates(country).get(0).getState_or_province();
+        List<StateObject> stateList = stateRepository.findStates(country);
 
         if(stateList != null){
-            return new ResponseEntity<List<Object>>(stateList, HttpStatus.ACCEPTED);
+            return new ResponseEntity<>(stateList, HttpStatus.ACCEPTED);
         } else
-        return new ResponseEntity<>(new ArrayList<>(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.BAD_REQUEST);
     }
 
     @RequestMapping(value = "/getCities",
             produces = { "application/json" },
             method = RequestMethod.GET)
-    ResponseEntity<List<Object>> getCities( @RequestParam(value = "state", required = false) String state,
+    ResponseEntity<List<CityObject>> getCities( @RequestParam(value = "state", required = false) String state,
                                             @RequestParam(value = "country", required = false) String country) {
-        List<Object> cityList;
+        List<CityObject> cityList;
         if(country == null){
             cityList = cityRepository.findByState(state);
         } else {
@@ -141,7 +143,7 @@ public class UIController {
         }
 
         if(cityList != null){
-            return new ResponseEntity<List<Object>>(cityList, HttpStatus.ACCEPTED);
+            return new ResponseEntity<>(cityList, HttpStatus.ACCEPTED);
         } else
             return new ResponseEntity<>(new ArrayList<>(), HttpStatus.ACCEPTED);
 

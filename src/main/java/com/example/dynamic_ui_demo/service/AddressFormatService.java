@@ -1,8 +1,6 @@
 package com.example.dynamic_ui_demo.service;
 
-import com.example.dynamic_ui_demo.model.AddressFormat;
-import com.example.dynamic_ui_demo.model.Country;
-import com.example.dynamic_ui_demo.model.StateFormat;
+import com.example.dynamic_ui_demo.model.*;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,7 +11,7 @@ public interface AddressFormatService {
     public void addAddressFormat(AddressFormat addressFormat);
     public List<StateFormat> findStateList();
 
-    List<Object> getCountries();
-    List<Object> getStates(String country);
-    List<Object> getCities(String state,String country);
+    List<Country> getCountries();
+    List<State> getStates(String country);
+    List<City> getCities(String state, String country);
 }

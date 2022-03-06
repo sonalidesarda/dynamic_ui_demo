@@ -4,12 +4,7 @@ import com.example.dynamic_ui_demo.Repository.CountryRepository;
 import com.example.dynamic_ui_demo.Repository.CityRepository;
 import com.example.dynamic_ui_demo.DynamicUiDemoApplication;
 import com.example.dynamic_ui_demo.Repository.StateRepository;
-import com.example.dynamic_ui_demo.controller.UIController;
-import com.example.dynamic_ui_demo.model.AddressFormat;
-import com.example.dynamic_ui_demo.model.Country;
-import com.example.dynamic_ui_demo.model.City;
-import com.example.dynamic_ui_demo.model.State;
-import com.example.dynamic_ui_demo.model.StateFormat;
+import com.example.dynamic_ui_demo.model.*;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
@@ -75,19 +70,19 @@ public class AddressFormatServiceImpl implements AddressFormatService{
 
 
     @Override
-    public List<Object> getCountries()
+    public List<Country> getCountries()
     {
         log.info("AddressFormatServiceImpl :: getCountries called");
-        List<Country> countries = countryRepository.findAll();
+        List<CountryObject> countries = countryRepository.findAll();
         log.info("AddressFormatServiceImpl :: getCountries result "+ countries);
         return  countries.get(0).getCountries();
     }
 
     @Override
-    public List<Object> getStates(String country)
+    public List<State> getStates(String country)
     {
         log.info("AddressFormatServiceImpl :: getCountries called");
-        List<State> states = stateRepository.findAll();
+        List<StateObject> states = stateRepository.findAll();
         log.info("Count***"+states.size());
         log.info("AddressFormatServiceImpl :: getCountries result "+ states);
 
@@ -95,10 +90,10 @@ public class AddressFormatServiceImpl implements AddressFormatService{
     }
 
     @Override
-    public List<Object> getCities(String state,String country)
+    public List<City> getCities(String state,String country)
     {
-        List<City> cities = cityRepository.findAll();
-        for(City c: cities){
+        List<CityObject> cities = cityRepository.findAll();
+        for(CityObject c: cities){
             if(c.getCountry().equals(country) && c.getState().equals(state)){
                 return c.getCities();
             }
