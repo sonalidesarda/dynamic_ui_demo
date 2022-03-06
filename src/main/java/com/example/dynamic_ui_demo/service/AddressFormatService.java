@@ -14,4 +14,6 @@ public interface AddressFormatService {
     public List<StateFormat> findStateList();
 
     List<Object> getCountries();
+    List<Object> getStates(String country);
+    List<Object> getCities(String state,String country);
 }

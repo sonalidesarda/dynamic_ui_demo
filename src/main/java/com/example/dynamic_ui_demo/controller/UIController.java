@@ -114,15 +114,14 @@ public class UIController {
     @RequestMapping(value = "/getCities",
             produces = { "application/json" },
             method = RequestMethod.GET)
-    ResponseEntity<List<City>> getCities( @RequestParam(value = "state", required = false) String state,
+    ResponseEntity<List<Object>> getCities( @RequestParam(value = "state", required = false) String state,
                                           @RequestParam(value = "country", required = false) String country)
     {
-        List<City> cityList = new ArrayList<>();
-        String accept = request.getHeader("Accept");
-        if (accept != null && accept.contains("application/json")) {
-            return new ResponseEntity<List<City>>(HttpStatus.NOT_IMPLEMENTED);
-        }
-        return new ResponseEntity<List<City>>(HttpStatus.NOT_IMPLEMENTED);
+        List<Object> cityList = addressFormatService.getCities(state,country);
+        if(cityList != null){
+            return new ResponseEntity<List<Object>>(cityList, HttpStatus.ACCEPTED);
+        } else
+            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.ACCEPTED);
     }
 
     @RequestMapping(value = "/getCountries",
@@ -138,15 +137,18 @@ public class UIController {
     @RequestMapping(value = "/getStateOrProvince",
             produces = { "application/json" },
             method = RequestMethod.GET)
-    ResponseEntity<List<State>> getStateOrProvince(
+    ResponseEntity<List<Object>> getStateOrProvince(
             @RequestParam(value = "country", required = false) String country)
     {
-        List<State> stateList = new ArrayList<>();
+        log.info("----------------------" + country);
+        List<Object> stateList = addressFormatService.getStates(country);
+        log.info("----------------------123" + stateList);
         String accept = request.getHeader("Accept");
-        if (accept != null && accept.contains("application/json")) {
-            return new ResponseEntity<List<State>>(HttpStatus.NOT_IMPLEMENTED);
-        }
-        return new ResponseEntity<List<State>>(HttpStatus.NOT_IMPLEMENTED);
+        //if (accept != null && accept.contains("application/json")) {
+        if(stateList != null){
+            return new ResponseEntity<List<Object>>(stateList, HttpStatus.ACCEPTED);
+        } else
+        return new ResponseEntity<>(new ArrayList<>(), HttpStatus.ACCEPTED);
     }
 
     @RequestMapping(value = "/searchForAddress",

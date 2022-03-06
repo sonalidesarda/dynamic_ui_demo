@@ -6,6 +6,6 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import java.util.List;
 
 public interface CityRepository extends MongoRepository<City, String> {
-    public List<City> findByStateAndCountry(String state, String country);
+    //public List<City> findByStateAndCountry(String state, String country);
 }
 
