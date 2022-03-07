@@ -93,32 +93,75 @@ public class UIController {
         List<Country> countries = countryRepository.findAll().get(0).getCountries();
         List<String> countriesList = countries.stream().map(c -> c.getName())
                 .collect(Collectors.toList());
-        if(country != null)
-        {
+        if(country != null) {
+            AddressFormat addressFormat = addressFormatRespository.findAddressFormatByCountry(country);
+
+            if(addressFormat.getAddress_one().getDisplay())
+            {
+                page.addAttribute("address_one_label",addressFormat.getAddress_one().getLabel_content());
+            }
+            if(addressFormat.getAddress_two().getDisplay())
+            {
+                page.addAttribute("address_two_label",addressFormat.getAddress_two().getLabel_content());
+            }
+            if(addressFormat.getAddress_three().getDisplay())
+            {
+                page.addAttribute("address_three_label",addressFormat.getAddress_three().getLabel_content());
+            }
+            if(addressFormat.getCity().getDisplay())
+            {
+                page.addAttribute("city_label",addressFormat.getCity().getLabel_content());
+            }
+            if(addressFormat.getPostal().getDisplay())
+            {
+                page.addAttribute("postal_label",addressFormat.getPostal().getLabel_content());
+            }
+            if(addressFormat.getState().getDisplay())
+            {
+                page.addAttribute("state_label",addressFormat.getState().getLabel_content());
+            }
+
             countriesList.remove(country);
             StateObject stateObject = stateRepository.findByCountry(country);
-            List<String> stateList = stateObject.getState_or_province().stream()
-                    .map(s -> s.getName()).collect(Collectors.toList());
+            List<String> stateList = null;
+            if(stateObject != null && stateObject.getStates() != null) {
+                stateList = stateObject.getStates().stream()
+                        .map(s -> s.getName()).collect(Collectors.toList());
+            }
+            if(stateList != null)
+                page.addAttribute("states", stateList);
+            page.addAttribute("country", country);
 
-            page.addAttribute("states", stateList);
-            page.addAttribute("country",country);
-
-            List<CityObject> cityList;
-            if(state != null)
-            {
-                if(stateList != null && stateList.contains(state))
-                {
+            CityObject cityObject = null;
+            List<CityObject> cityObjects = null;
+            List<String> cityList = null;
+            if (state != null) {
+                if (stateList != null && stateList.contains(state)) {
                     stateList.remove(state);
                 }
-                page.addAttribute("state",state);
-                cityList = cityRepository.findByState(state);
+                page.addAttribute("state", state);
+                cityObject = cityRepository.findByCountryAndState(country, state);
+
+            } else if(!addressFormat.getState().getDisplay()){
+                cityObjects = cityRepository.findByCountry(country);
             }
-            else
+
+            if (cityObject != null && cityObject.getCities() != null) {
+                cityList = cityObject.getCities().stream().map(c -> c.getName()).collect(Collectors.toList());
+            }
+            if (cityObjects != null) {
+
+                cityList = cityObjects.stream().filter(c -> c.getCities() != null)
+                        .flatMap(cityObject1 -> cityObject1.getCities().stream())
+                        .map(city ->
+                                city.getName()).collect(Collectors.toList());
+            }
+            if(cityList != null)
             {
-                cityList = cityRepository.findByCountry(country);
+                page.addAttribute("cities", cityList);
             }
-            page.addAttribute("cities",cityList);
         }
+
 
         page.addAttribute("countries",countriesList);
         return "India_Address.html";
@@ -126,10 +169,10 @@ public class UIController {
 
 
     @RequestMapping(value = "/getAddressFormat1", produces = { "application/json" }, method = RequestMethod.GET)
-    ResponseEntity<AddressFormat> getAddressFormat1( @RequestParam(value = "country", required = true) String country) {
+    ResponseEntity<AddressFormat> getAddressFormat1( @RequestParam(value = "country", required = true) String country){
 
+        AddressFormat addressFormat = addressFormatRespository.findAddressFormatByCountry(country);
 
-        AddressFormat addressFormat = (AddressFormat) addressFormatRespository.getAddressFormat(country).get(0);
 
         if (addressFormat != null) {
             return new ResponseEntity<AddressFormat>(addressFormat, HttpStatus.ACCEPTED);
@@ -157,7 +200,7 @@ public class UIController {
             @RequestParam(value = "country", required = true) String country) {
 
         StateObject stateObject = stateRepository.findByCountry(country);
-        List<String> stateList = stateObject.getState_or_province().stream().map(s -> s.getName()).collect(Collectors.toList());
+        List<String> stateList = stateObject.getStates().stream().map(s -> s.getName()).collect(Collectors.toList());
         if(stateList != null){
             return new ResponseEntity<>(stateList, HttpStatus.ACCEPTED);
         } else
@@ -167,20 +210,35 @@ public class UIController {
     @RequestMapping(value = "/getCities",
             produces = { "application/json" },
             method = RequestMethod.GET)
-    ResponseEntity<List<CityObject>> getCities( @RequestParam(value = "state", required = false) String state,
-                                            @RequestParam(value = "country", required = false) String country) {
-        List<CityObject> cityList;
-        if(country == null){
-            cityList = cityRepository.findByState(state);
+    ResponseEntity<List<String>> getCities( @RequestParam(value = "state", required = false) String state,
+                                            @RequestParam(value = "country", required = true) String country) {
+        List<String> cityList = null;
+        CityObject cityObject = null;
+        List<CityObject> cityObjects = null;
+        if(state == null){
+            cityObjects = cityRepository.findByCountry(country);
         } else {
-            cityList = cityRepository.findByCountry(country);
+            cityObject = cityRepository.findByCountryAndState(country, state);
+        }
+        if (cityObjects != null)
+        {
+
+                cityList = cityObjects.stream().filter(c -> c.getCities() != null)
+                        .flatMap(cityObject1 -> cityObject1.getCities().stream())
+                        .map(city ->
+                                city.getName()).collect(Collectors.toList());
         }
 
-        if(cityList != null){
-            return new ResponseEntity<>(cityList, HttpStatus.ACCEPTED);
-        } else
+        if(cityObject != null && cityObject.getCities() != null)
+        {
+            cityList = cityObject.getCities().stream().map(c -> c.getName()).collect(Collectors.toList());
+        }
+        if(cityList != null)
+        {
+             return new ResponseEntity<>(cityList, HttpStatus.ACCEPTED);
+        }
+        else
             return new ResponseEntity<>(new ArrayList<>(), HttpStatus.ACCEPTED);
-
     }
 
     @RequestMapping(value = "/searchForAddress",

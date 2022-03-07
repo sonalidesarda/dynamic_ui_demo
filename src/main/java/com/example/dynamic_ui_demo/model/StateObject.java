@@ -20,6 +20,7 @@ public class StateObject {
     private ObjectId _id;
 
     private String country;
+
     private ArrayList<State> state_or_province;
 
     public StateObject(){}

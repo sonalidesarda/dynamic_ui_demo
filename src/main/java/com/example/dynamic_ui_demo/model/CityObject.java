@@ -6,6 +6,7 @@ import lombok.ToString;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.ArrayList;
 
@@ -20,15 +21,17 @@ public class CityObject {
     private ObjectId _id;
 
     private String country;
-    private String state_or_province;
+
+    @Field(value = "state_or_province")
+    private String state;
     private ArrayList<City> cities;
 
     public CityObject(){}
 
-    public CityObject(ObjectId _id, ArrayList<City> cities, String country, String state_or_province) {
+    public CityObject(ObjectId _id, ArrayList<City> cities, String country, String state) {
         this._id = _id;
         this.country = country;
-        this.state_or_province = state_or_province;
+        this.state = state;
         this.cities = cities;
     }
 
@@ -45,7 +48,7 @@ public class CityObject {
     }
 
     public String getState(){
-        return state_or_province;
+        return state;
     }
 
 

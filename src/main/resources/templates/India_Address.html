@@ -77,30 +77,30 @@ hr {
 <input type="radio" value="Within Country" name="gender" style="height:10px; width:30px;" checked > Within Country 
 <input type="radio" value="Across Countries" name="gender" style="height:10px; width:30px;"> Across Countries <br><br>
 </div>
-<div> 
-Flat, House no., Building, Company, Apartment<br>
-<input type="text" name = "Address1" style="height:10px; width:470px;"  required/><br>
-<label> Area, Colony, Street, Sector, Village</label> <br>
-<input type="text" name="Address2"  size="15" style="height:10px; width:470px;" /> <br>
-<label> Landmark</label> <br>
-<input type="text" name="Landmark" placeholder= "Landmark" size="15" style="height:10px; width:470px;" /> <br>
-    <label> City:  </label>
-    <select  id="cities" name="cities" >
-        <option th:each="city : ${cities}"
+<div>
+    <label th:if="${address_one_label}" th:text="${address_one_label}"> </label> <br>
+    <input th:if="${address_one_label}" type="text" name="Address1"  size="15" style="height:10px; width:470px;" /> <br>
+<label th:if="${address_two_label}" th:text="${address_two_label}"> </label> <br>
+<input th:if="${address_two_label}" type="text" name="Address2"  size="15" style="height:10px; width:470px;" /> <br>
+    <label th:if="${address_three_label}" th:text="${address_three_label}"> </label> <br>
+    <input th:if="${address_three_label}" type="text" name="Address3"  size="15" style="height:10px; width:470px;" /> <br>
+    <label th:if="${city_label}" th:text="${city_label}"> </label>
+    <select  th:if="${city_label}" id="cities" name="cities" >
+        <option th:if="${cities}" th:each="city : ${cities}"
                 th:value="${city}"
                 th:text="${city}"></option>
     </select>
-<label> State:  </label>
-        <select  id="states" name="states" style="height:25px; width:435px;" class="form-control"
-                 onchange="window.location.href='/getAddressFormat?state='+ this.value;">
+<label th:if="${state_label}" th:text="${state_label}">  </label>
+        <select  th:if="${state_label}" id="states" name="states" style="height:25px; width:435px;" class="form-control"
+                 th:onchange="window.location.href='/getAddressFormat?state='+ this.value">
             <option th:if="${state}" th:value="${state}"
                     th:text="${state}"></option>
             <option th:each="state : ${states}"
                     th:value="${state}"
                     th:text="${state}"></option>
         </select>
-    <label> Zipcode </label>
-<input type="text" name="zipcode" placeholder= "zipcode" size="15" style="height:10px; width:60px;" required/> 
+    <label th:if="${postal_label}" th:text="${postal_label}"> </label>
+<input th:if="${postal_label}" type="text" name="zipcode" placeholder= "zipcode" size="15" style="height:10px; width:60px;" required/>
 <div>
 <label>   
 Phone :  
