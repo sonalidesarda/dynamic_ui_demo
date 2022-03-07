@@ -83,7 +83,7 @@ public class UIController {
 
         return "AddressFormats.html";
     }
-    
+
     @RequestMapping(value = "/getAddressFormat", method = RequestMethod.GET)
     String getAddressFormat(
             @RequestParam(value = "country", required = false) String country,
@@ -96,12 +96,21 @@ public class UIController {
         if(country != null)
         {
             countriesList.remove(country);
-            List<StateObject> stateList = stateRepository.findStates(country);
+            StateObject stateObject = stateRepository.findByCountry(country);
+            List<String> stateList = stateObject.getState_or_province().stream()
+                    .map(s -> s.getName()).collect(Collectors.toList());
+
             page.addAttribute("states", stateList);
             page.addAttribute("country",country);
+
             List<CityObject> cityList;
             if(state != null)
             {
+                if(stateList != null && stateList.contains(state))
+                {
+                    stateList.remove(state);
+                }
+                page.addAttribute("state",state);
                 cityList = cityRepository.findByState(state);
             }
             else
@@ -144,11 +153,11 @@ public class UIController {
     @RequestMapping(value = "/getStateOrProvince",
             produces = { "application/json" },
             method = RequestMethod.GET)
-    ResponseEntity<List<StateObject>> getStateOrProvince(
-            @RequestParam(value = "country", required = false) String country) {
+    ResponseEntity<List<String>> getStateOrProvince(
+            @RequestParam(value = "country", required = true) String country) {
 
-        List<StateObject> stateList = stateRepository.findStates(country);
-
+        StateObject stateObject = stateRepository.findByCountry(country);
+        List<String> stateList = stateObject.getState_or_province().stream().map(s -> s.getName()).collect(Collectors.toList());
         if(stateList != null){
             return new ResponseEntity<>(stateList, HttpStatus.ACCEPTED);
         } else

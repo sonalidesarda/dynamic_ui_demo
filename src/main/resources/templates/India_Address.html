@@ -93,6 +93,8 @@ Flat, House no., Building, Company, Apartment<br>
 <label> State:  </label>
         <select  id="states" name="states" style="height:25px; width:435px;" class="form-control"
                  onchange="window.location.href='/getAddressFormat?state='+ this.value;">
+            <option th:if="${state}" th:value="${state}"
+                    th:text="${state}"></option>
             <option th:each="state : ${states}"
                     th:value="${state}"
                     th:text="${state}"></option>
