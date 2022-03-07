@@ -55,13 +55,13 @@ hr {
 </style>
 </head>
 <body>
-<form  method="post"  action="search" modelAttribute="addressFormat">
+<form  enctype='multipart/form-data' th:method="post"  th:action="@{/searchForAddress}" >
   <div class="container">
   <center>  <h1> Address Locater</h1> </center>
   <hr>
-  <label> FullName </label> 
-<input type="text"  name="fullName" placeholder= "FullName" size="15" style="height:10px; width:400px;" required />
-<div>
+  <label> FullName </label>
+      <input id="firstName" placeholder="Enter First Name" required type="text" name="firstName"  size="15" style="height:10px; width:470px;"  class="form-control"/>
+
 <label for="country">Country</label><span style="color: red !important; display: inline; float: none;">*</span>      
         
             <select id="country" name="country" style="height:25px; width:435px;" class="form-control"
@@ -72,27 +72,25 @@ hr {
                         th:value="${country}"
                         th:text="${country}"></option>
             </select>
-</div>
       <label>Search Type:</label>
-<input type="radio" value="Within Country" name="gender" style="height:10px; width:30px;" checked > Within Country 
-<input type="radio" value="Across Countries" name="gender" style="height:10px; width:30px;"> Across Countries <br><br>
-</div>
-<div>
+<input type="radio" value="Within Country" name="searchType" style="height:10px; width:30px;" checked > Within Country
+<input type="radio" value="Across Countries" name="searchType" style="height:10px; width:30px;"> Across Countries <br><br>
+
     <label th:if="${address_one_label}" th:text="${address_one_label}"> </label> <br>
-    <input th:if="${address_one_label}" type="text" name="Address1"  size="15" style="height:10px; width:470px;" /> <br>
+    <input th:if="${address_one_label}" type="text" name="address_one"  size="15" style="height:10px; width:470px;" /> <br>
 <label th:if="${address_two_label}" th:text="${address_two_label}"> </label> <br>
-<input th:if="${address_two_label}" type="text" name="Address2"  size="15" style="height:10px; width:470px;" /> <br>
+<input th:if="${address_two_label}" type="text" name="address_two"  size="15" style="height:10px; width:470px;" /> <br>
     <label th:if="${address_three_label}" th:text="${address_three_label}"> </label> <br>
-    <input th:if="${address_three_label}" type="text" name="Address3"  size="15" style="height:10px; width:470px;" /> <br>
+    <input th:if="${address_three_label}" type="text" name="address_three"  size="15" style="height:10px; width:470px;" /> <br>
     <label th:if="${city_label}" th:text="${city_label}"> </label>
-    <select  th:if="${city_label}" id="cities" name="cities" >
+    <select  th:if="${city_label}" id="city" name="city" class="form-control">
         <option th:if="${cities}" th:each="city : ${cities}"
                 th:value="${city}"
                 th:text="${city}"></option>
     </select>
 <label th:if="${state_label}" th:text="${state_label}">  </label>
-        <select  th:if="${state_label}" id="states" name="states" style="height:25px; width:435px;" class="form-control"
-                 th:onchange="window.location.href='/getAddressFormat?state='+ this.value">
+        <select  th:if="${state_label}" id="state" name="state" style="height:25px; width:435px;" class="form-control"
+                 th:onchange="window.location.href='/getAddressFormat?country='+${country}+'&state='+ this.value">
             <option th:if="${state}" th:value="${state}"
                     th:text="${state}"></option>
             <option th:each="state : ${states}"
@@ -101,13 +99,7 @@ hr {
         </select>
     <label th:if="${postal_label}" th:text="${postal_label}"> </label>
 <input th:if="${postal_label}" type="text" name="zipcode" placeholder= "zipcode" size="15" style="height:10px; width:60px;" required/>
-<div>
-<label>   
-Phone :  
-</label>  
-<input type="text" name="country code" maxlength="3" value="+91" size="2" style="height:10px; width:30px;"/>   
-<input type="text" name="phone" maxlength="10" size="10" style="height:10px; width:100px;"/> <br> <br>  
 
 <input type="submit" value="Submit"/>
-</div>
+  </div>
 </form></body></html>

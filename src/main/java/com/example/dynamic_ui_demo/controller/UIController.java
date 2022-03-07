@@ -242,15 +242,37 @@ public class UIController {
     }
 
     @RequestMapping(value = "/searchForAddress",
-            produces = { "application/json" },
             method = RequestMethod.POST)
     ResponseEntity<List<Address>> getAddress(
-            @RequestBody Address inputAddress) {
-        String accept = request.getHeader("Accept");
-        if (accept != null && accept.contains("application/json")) {
-            return new ResponseEntity<List<Address>>(HttpStatus.NOT_IMPLEMENTED);
-        }
-        return new ResponseEntity<List<Address>>(HttpStatus.NOT_IMPLEMENTED);
+            @RequestPart(required = false) String firstName,
+            @RequestPart(required = false) String country,
+            @RequestPart(required = false) String zipcode,
+            @RequestPart(required = false) String address_one,
+            @RequestPart(required = false) String address_two,
+            @RequestPart(required = false) String address_three,
+            @RequestPart(required = false) String state,
+            @RequestPart(required = false) String city,
+            @RequestPart(required = false) String searchType) {
+        if(searchType != null)
+            log.info("Input searchType Object :: "+searchType);
+        if(country != null)
+            log.info("Input country Object :: "+country);
+        if(state != null)
+            log.info("Input state Object :: "+state);
+        if(firstName != null)
+            log.info("Input firstName Object :: "+firstName);
+        if(city != null)
+            log.info("Input city Object :: "+city);
+        if(zipcode != null)
+            log.info("Input zipcode Object :: "+zipcode);
+        if(address_one != null)
+            log.info("Input address_one Object :: "+address_one);
+        if(address_two != null)
+            log.info("Input address_two Object :: "+address_two);
+        if(address_three != null)
+            log.info("Input address_three Object :: "+address_three);
+        List<Address> addressList = new ArrayList<>();
+        return new ResponseEntity<List<Address>>(HttpStatus.ACCEPTED);
     }
 
 
