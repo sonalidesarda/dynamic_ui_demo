@@ -10,8 +10,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
-
+import org.springframework.data.mongodb.core.MongoTemplate;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -31,6 +33,9 @@ public class AddressFormatServiceImpl implements AddressFormatService{
     @Autowired
     CityRepository cityRepository;
 
+    @Autowired
+    MongoTemplate mongoTemplate;
+
     public AddressFormatServiceImpl(CountryRepository countryRepository, StateRepository stateRepository,CityRepository cityRepository)
     {
         this.countryRepository = countryRepository;
@@ -46,6 +51,35 @@ public class AddressFormatServiceImpl implements AddressFormatService{
     public List<AddressFormat> findAll() {
 
         return addressFormatList;
+    }
+
+    @Override
+    public List<Address> searchAddress(String firstName, String address_one,
+                                       String address_two, String address_three,
+                                       String city, String zipcode, String state,
+                                       String country, String searchType){
+        log.info("searchAddress service called");
+        Query query = new Query();
+        if(firstName != null)
+            query.addCriteria(Criteria.where("name").regex(firstName,"i"));
+        if(address_one != null)
+            query.addCriteria(Criteria.where("address_one").regex(address_one,"i"));
+        if(address_two != null)
+            query.addCriteria(Criteria.where("address_two").regex(address_two,"i"));
+        if(address_three != null)
+            query.addCriteria(Criteria.where("address_three").regex(address_three,"i"));
+        if(city != null)
+            query.addCriteria(Criteria.where("city").regex(city,"i"));
+        if(zipcode != null)
+            query.addCriteria(Criteria.where("postal").regex(zipcode,"i"));
+        if(state != null)
+            query.addCriteria(Criteria.where("state").regex(state,"i"));
+        if(searchType != null && searchType.equals("Within Country") && country != null)
+            query.addCriteria(Criteria.where("country").regex(country,"i"));
+
+
+        List<Address> addressList = mongoTemplate.find(query, Address.class);
+        return addressList;
     }
 
     @Override

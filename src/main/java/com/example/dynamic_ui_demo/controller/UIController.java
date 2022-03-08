@@ -1,13 +1,12 @@
 package com.example.dynamic_ui_demo.controller;
 
-import com.example.dynamic_ui_demo.Repository.AddressFormatRepository;
-import com.example.dynamic_ui_demo.Repository.CityRepository;
-import com.example.dynamic_ui_demo.Repository.CountryRepository;
-import com.example.dynamic_ui_demo.Repository.StateRepository;
+import com.example.dynamic_ui_demo.Repository.*;
 import com.example.dynamic_ui_demo.model.*;
+import com.example.dynamic_ui_demo.service.AddressFormatService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.aggregation.ArithmeticOperators;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,17 +28,22 @@ public class UIController {
     private final CityRepository cityRepository;
     private final StateRepository stateRepository;
     private final AddressFormatRepository addressFormatRespository;
+    private final AddressRepository addressRepository;
 
+    @Autowired
+    AddressFormatService addressFormatService;
     private static final Logger log = LoggerFactory.getLogger(UIController.class);
 
 
     @org.springframework.beans.factory.annotation.Autowired
     public UIController( CountryRepository countryRepository,
-                        CityRepository cityRepository, StateRepository stateRepository, AddressFormatRepository addressFormatRespository) {
+                        CityRepository cityRepository, StateRepository stateRepository, AddressFormatRepository addressFormatRepository
+            , AddressRepository addressRepository) {
         this.countryRepository = countryRepository;
         this.cityRepository = cityRepository;
         this.stateRepository = stateRepository;
-        this.addressFormatRespository = addressFormatRespository;
+        this.addressFormatRespository = addressFormatRepository;
+        this.addressRepository = addressRepository;
     }
 
     @RequestMapping(value = "/getAddressFormat", method = RequestMethod.GET)
@@ -110,7 +115,7 @@ public class UIController {
                 page.addAttribute("state", state);
                 cityObject = cityRepository.findByCountryAndState(country, state);
 
-            } else if(!addressFormat.getState().getDisplay()){
+            } else if(addressFormat != null && addressFormat.getState() != null && !addressFormat.getState().getDisplay()){
                 cityObjects = cityRepository.findByCountry(country);
             }
 
@@ -126,6 +131,7 @@ public class UIController {
             }
             if(cityList != null)
             {
+                Collections.sort(cityList);
                 page.addAttribute("cities", cityList);
             }
         }
@@ -200,6 +206,7 @@ public class UIController {
         if(cityObject != null && cityObject.getCities() != null)
         {
             cityList = cityObject.getCities().stream().map(c -> c.getName()).collect(Collectors.toList());
+            Collections.sort(cityList);
         }
         if(cityList != null)
         {
@@ -221,26 +228,12 @@ public class UIController {
             @RequestPart(required = false) String state,
             @RequestPart(required = false) String city,
             @RequestPart(required = false) String searchType) {
-        if(searchType != null)
-            log.info("Input searchType Object :: "+searchType);
-        if(country != null)
-            log.info("Input country Object :: "+country);
-        if(state != null)
-            log.info("Input state Object :: "+state);
-        if(firstName != null)
-            log.info("Input firstName Object :: "+firstName);
-        if(city != null)
-            log.info("Input city Object :: "+city);
-        if(zipcode != null)
-            log.info("Input zipcode Object :: "+zipcode);
-        if(address_one != null)
-            log.info("Input address_one Object :: "+address_one);
-        if(address_two != null)
-            log.info("Input address_two Object :: "+address_two);
-        if(address_three != null)
-            log.info("Input address_three Object :: "+address_three);
-        List<Address> addressList = new ArrayList<>();
-        return new ResponseEntity<List<Address>>(HttpStatus.ACCEPTED);
+
+        List<Address> addressList =  addressFormatService.searchAddress(firstName,address_one,address_two,address_three,city,zipcode,state,country,searchType);
+        if(addressList != null)
+            return new ResponseEntity<>(addressList,HttpStatus.ACCEPTED);
+        else
+            return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 
 

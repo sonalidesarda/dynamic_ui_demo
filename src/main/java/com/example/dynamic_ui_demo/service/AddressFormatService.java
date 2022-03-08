@@ -9,6 +9,9 @@ import java.util.List;
 public interface AddressFormatService {
     public List<AddressFormat> findAll();
     public void addAddressFormat(AddressFormat addressFormat);
+
+    List<Address> searchAddress(String firstName,String address_one,String address_two,String address_three,String city,String zipcode,String state,String country,String searchType);
+
     public List<StateFormat> findStateList();
 
     List<Country> getCountries();
