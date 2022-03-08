@@ -93,9 +93,16 @@ public class UIController {
         List<Country> countries = countryRepository.findAll().get(0).getCountries();
         List<String> countriesList = countries.stream().map(c -> c.getName())
                 .collect(Collectors.toList());
+        AddressFormat addressFormat ;
         if(country != null) {
-            AddressFormat addressFormat = addressFormatRespository.findAddressFormatByCountry(country);
-
+            addressFormat = addressFormatRespository.findAddressFormatByCountry(country);
+        }
+        else
+        {
+            addressFormat = addressFormatRespository.findAddressFormatByCountry("STANDARD");
+        }
+        if(addressFormat != null)
+        {
             if(addressFormat.getAddress_one().getDisplay())
             {
                 page.addAttribute("address_one_label",addressFormat.getAddress_one().getLabel_content());
@@ -120,6 +127,10 @@ public class UIController {
             {
                 page.addAttribute("state_label",addressFormat.getState().getLabel_content());
             }
+
+        }
+        if(country != null) {
+
 
             countriesList.remove(country);
             StateObject stateObject = stateRepository.findByCountry(country);
