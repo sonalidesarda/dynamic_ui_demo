@@ -46,44 +46,6 @@ public class UIController {
         this.addressFormatRespository = addressFormatRespository;
     }
 
-    @RequestMapping("/addressFormat")
-    public String viewForms( Model page) {
-//        List<AddressFormat> addressFormatList = addressFormatService.findAll();
-//        page.addAttribute("addressformats", addressFormatList);
-        return "AddressFormats.html";
-    }
-
-    @RequestMapping("/addressformat")
-    public String viewForm(@RequestParam String country, Model page) {
-//        List<StateFormat> stateFormatList = addressFormatService.findStateList();
-//        page.addAttribute("states", stateFormatList);
-//        List<String> statesList =  stateFormatList.stream().map(state -> state.getName()).collect(Collectors.toList());
-//        System.out.println(statesList);
-//        page.addAttribute("statesList",
-//                statesList);
-
-        return String.format("%s_Address.html",country);
-    }
-
-    @RequestMapping(path = "/addressformat",
-            method = RequestMethod.POST)
-    public String addProduct(
-            @RequestParam String country,
-            @RequestParam Integer pincode,
-            @RequestParam String city,
-            @RequestParam String username,
-            Model model
-    ) {
-//        AddressFormat addressFormat = new AddressFormat();
-//        addressFormat.setFullName(username);
-//        addressFormatService.addAddressFormat(addressFormat);
-//
-//        List<AddressFormat> addressFormatList = addressFormatService.findAll();
-//        model.addAttribute("addressformats", addressFormatList);
-
-        return "AddressFormats.html";
-    }
-
     @RequestMapping(value = "/getAddressFormat", method = RequestMethod.GET)
     String getAddressFormat(
             @RequestParam(value = "country", required = false) String country,
@@ -175,7 +137,7 @@ public class UIController {
 
 
         page.addAttribute("countries",countriesList);
-        return "India_Address.html";
+        return "Address_Search_Form.html";
     }
 
 
