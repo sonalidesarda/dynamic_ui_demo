@@ -68,13 +68,14 @@ hr {
                     onchange="window.location.href='/getAddressFormat?country=' + this.value;">
                 <option th:if="${country}" th:value="${country}"
                         th:text="${country}"></option>
+                <option th:if="${country == null}" disabled selected value> -- select an option -- </option>
                 <option th:each="country : ${countries}"
                         th:value="${country}"
                         th:text="${country}"></option>
             </select>
       <label>Search Type:</label>
-<input type="radio" value="Within Country" name="searchType" style="height:10px; width:30px;" checked > Within Country
-<input type="radio" value="Across Countries" name="searchType" style="height:10px; width:30px;"> Across Countries <br><br>
+<input type="radio" value="WithinCountry" name="searchType" style="height:10px; width:30px;" checked > Within Country
+<input type="radio" value="AcrossCountries" name="searchType" style="height:10px; width:30px;"> Across Countries <br><br>
 
     <label th:if="${address_one_label}" th:text="${address_one_label}"> </label> <br>
     <input th:if="${address_one_label}" type="text" name="address_one"  size="15" style="height:10px; width:470px;" /> <br>
@@ -84,6 +85,7 @@ hr {
     <input th:if="${address_three_label}" type="text" name="address_three"  size="15" style="height:10px; width:470px;" /> <br>
     <label th:if="${city_label}" th:text="${city_label}"> </label>
     <select  th:if="${city_label}" id="city" name="city" class="form-control">
+        <option disabled selected value> -- select an option -- </option>
         <option th:if="${cities}" th:each="city : ${cities}"
                 th:value="${city}"
                 th:text="${city}"></option>
@@ -93,6 +95,7 @@ hr {
                  th:onchange="window.location.href='/getAddressFormat?country='+country.value+'&state='+ this.value">
             <option th:if="${state}" th:value="${state}"
                     th:text="${state}"></option>
+            <option th:if="${state == null}" disabled selected value> -- select an option -- </option>
             <option th:each="state : ${states}"
                     th:value="${state}"
                     th:text="${state}"></option>

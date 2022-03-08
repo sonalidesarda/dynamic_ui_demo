@@ -50,6 +50,7 @@ public class UIController {
     String getAddressFormat(
             @RequestParam(value = "country", required = false) String country,
             @RequestParam(value = "state", required = false) String state,
+            @RequestParam(value = "searchType", required = false) String searchType,
                              Model page)
     {
         List<Country> countries = countryRepository.findAll().get(0).getCountries();
@@ -153,18 +154,7 @@ public class UIController {
         } else {
             return new ResponseEntity<AddressFormat>(new AddressFormat(), HttpStatus.ACCEPTED);
         }
-//        String accept = request.getHeader("Accept");
-//        if (accept != null && accept.contains("application/json")) {
-//            try {
-//                return new ResponseEntity<AddressFormat>(objectMapper.readValue("{  \"bytes\": [],  \"empty\": true}", AddressFormat.class), HttpStatus.NOT_IMPLEMENTED);
-//            } catch (IOException e) {
-//                log.error("Couldn't serialize response for content type application/json", e);
-//                return new ResponseEntity<AddressFormat>(HttpStatus.INTERNAL_SERVER_ERROR);
-//            }
-//        }
-//
-//        return new ResponseEntity<AddressFormat>(HttpStatus.NOT_IMPLEMENTED);
-    }
+ }
 
 
     @RequestMapping(value = "/getStateOrProvince",
@@ -218,7 +208,7 @@ public class UIController {
 
     @RequestMapping(value = "/searchForAddress",
             method = RequestMethod.POST)
-    ResponseEntity<List<Address>> getAddress(
+    String getAddress(Model page,
             @RequestPart(required = false) String firstName,
             @RequestPart(required = false) String country,
             @RequestPart(required = false) String zipcode,
@@ -230,10 +220,8 @@ public class UIController {
             @RequestPart(required = false) String searchType) {
 
         List<Address> addressList =  addressFormatService.searchAddress(firstName,address_one,address_two,address_three,city,zipcode,state,country,searchType);
-        if(addressList != null)
-            return new ResponseEntity<>(addressList,HttpStatus.ACCEPTED);
-        else
-            return new ResponseEntity<>(HttpStatus.ACCEPTED);
+        page.addAttribute("addressList",addressList);
+        return "search_result.html";
     }
 
 

@@ -1,10 +1,36 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Home Page</title>
 </head>
 <body>
+<h1>Address Formats</h1>
+
+<h2>View Address Formats</h2>
+
+<table>
+    <tr>
+        <th>FIRST NAME</th>
+        <th>Address1</th>
+        <th>Address2</th>
+        <th>Address3</th>
+        <th>City</th>
+        <th>Postal</th>
+        <th>State</th>
+        <th>Country</th>
+    </tr>
+    <tr th:each="p: ${addressList}" >
+        <td th:text="${p.name}"></td>
+        <td th:text="${p.address_one}"></td>
+        <td th:text="${p.address_two}"></td>
+        <td th:text="${p.address_three}"></td>
+        <td th:text="${p.city}"></td>
+        <td th:text="${p.postal}"></td>
+        <td th:text="${p.state}"></td>
+        <td th:text="${p.country}"></td>
+    </tr>
+</table>
 
 </body>
 </html>

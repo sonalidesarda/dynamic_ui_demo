@@ -74,7 +74,7 @@ public class AddressFormatServiceImpl implements AddressFormatService{
             query.addCriteria(Criteria.where("postal").regex(zipcode,"i"));
         if(state != null)
             query.addCriteria(Criteria.where("state").regex(state,"i"));
-        if(searchType != null && searchType.equals("Within Country") && country != null)
+        if(searchType != null && searchType.equals("WithinCountry") && country != null)
             query.addCriteria(Criteria.where("country").regex(country,"i"));
 
 
