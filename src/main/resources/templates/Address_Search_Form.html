@@ -90,7 +90,7 @@ hr {
     </select>
 <label th:if="${state_label}" th:text="${state_label}">  </label>
         <select  th:if="${state_label}" id="state" name="state" style="height:25px; width:435px;" class="form-control"
-                 th:onchange="window.location.href='/getAddressFormat?country='+${country}+'&state='+ this.value">
+                 th:onchange="window.location.href='/getAddressFormat?country='+country.value+'&state='+ this.value">
             <option th:if="${state}" th:value="${state}"
                     th:text="${state}"></option>
             <option th:each="state : ${states}"
