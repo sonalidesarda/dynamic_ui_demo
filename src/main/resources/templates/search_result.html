@@ -3,15 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <title>Home Page</title>
+    <style>
+        table,
+        th,
+        td {
+            padding: 10px;
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+    </style>
 </head>
+
 <body>
-<h1>Address Formats</h1>
 
-<h2>View Address Formats</h2>
+<h2>View Address Results</h2>
+<label th:if="${addressList == null}">No results found</label>
 
-<table>
+<table th:if="${addressList != null}">
     <tr>
-        <th>FIRST NAME</th>
+        <th>Name</th>
         <th>Address1</th>
         <th>Address2</th>
         <th>Address3</th>
