@@ -31,15 +31,10 @@ public class UIController {
 
     private static final Logger log = LoggerFactory.getLogger(UIController.class);
 
-    private final ObjectMapper objectMapper;
-
-    private final HttpServletRequest request;
 
     @org.springframework.beans.factory.annotation.Autowired
-    public UIController(ObjectMapper objectMapper, HttpServletRequest request, CountryRepository countryRepository,
+    public UIController( CountryRepository countryRepository,
                         CityRepository cityRepository, StateRepository stateRepository, AddressFormatRepository addressFormatRespository) {
-        this.objectMapper = objectMapper;
-        this.request = request;
         this.countryRepository = countryRepository;
         this.cityRepository = cityRepository;
         this.stateRepository = stateRepository;
