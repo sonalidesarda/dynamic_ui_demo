@@ -60,7 +60,7 @@ hr {
   <center>  <h1> Address Locater</h1> </center>
   <hr>
   <label> FullName </label>
-      <input id="firstName" placeholder="Enter First Name" required type="text" name="firstName"  size="15" style="height:10px; width:470px;"  class="form-control"/>
+      <input id="firstName" placeholder="Enter First Name" required type="text" name="firstName"  size="15" style="height:10px; width:470px;"  class="form-control"/><br/>
 
 <label for="country">Country</label><span style="color: red !important; display: inline; float: none;">*</span>      
         
@@ -72,7 +72,7 @@ hr {
                 <option th:each="country : ${countries}"
                         th:value="${country}"
                         th:text="${country}"></option>
-            </select>
+            </select><br/>
       <label>Search Type:</label>
 <input type="radio" value="WithinCountry" name="searchType" style="height:10px; width:30px;" checked > Within Country
 <input type="radio" value="AcrossCountries" name="searchType" style="height:10px; width:30px;"> Across Countries <br><br>
